@@ -18,7 +18,7 @@ def login():
     usuario_digitado = request.form.get('username')
     senha_digitada = request.form.get('password')
 
-    if usuario_digitado == "mateus" and senha_digitada == "1234":
+    if usuario_digitado == "mateus" and senha_digitada == "1234" or usuario_digitado == 'Deivisson' and senha_digitada == "4321"  :
         # O usuario é guardado na sessão
         session['usuario'] = usuario_digitado
         return redirect(url_for('dashboard'))
