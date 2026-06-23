@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    
+    /* IMAGEM DE FUNDO COM MENOS NEVOEIRO (Apenas 35% de película branca) */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.35)), 
+                      url('/static/fabrica.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* 1. LOGÓTIPO NO CANTO SUPERIOR ESQUERDO SEM FUNDO */
+.logo-empresa {
+    max-width: 220px;
+    mix-blend-mode: multiply; /* Retira o fundo branco do JPG */
+    position: absolute; 
+    top: 15px;
+    left: 25px;
+}
+
+/* 2. LIMITAR A LARGURA DA CAIXA CENTRAL */
+.main-container {
+    max-width: 850px;
+    margin: 120px auto 40px; /* Espaço no topo para não chocar com o logótipo */
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    overflow: hidden; /* Mantém os cantos arredondados limpos */
+}
+
+.top-warning {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* 3. ABAS (Estilo SIGAA) */
+.tabs-container {
+    display: flex;
+    width: 100%;
+}
+
+.tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa; /* Cinza bem claro das abas inativas */
+    border-right: 1px solid #dee2e6;
+    cursor: pointer;
+    color: #333;
+    transition: 0.2s;
+    margin: 0;
+}
+
+.tab-btn:last-child {
+    border-right: none;
+}
+
+.btn-check:checked + .tab-btn {
+    background-color: #fff9c4 !important; /* Amarelinho do SIGAA */
+    border-bottom: none; 
+    border-top: 4px solid #ff8c00; /* Linha Laranja da marca em cima */
+}
+
+/* 4. CAIXA DE LOGIN GERAL */
+.login-box {
+    background-color: #ffffff;
+    padding: 40px 20px;
+}
+
+/* 5. CAIXINHA INTERNA COM OS CAMPOS */
+.login-inner {
+    max-width: 420px;
+    margin: 0 auto;
+    background-color: #fafbfc;
+    border: 1px solid #cdd4db;
+    padding-bottom: 25px;
+    border-radius: 4px;
+}
+
+/* Cabeçalho da caixinha interna */
+.login-inner-header {
+    background-color: #dbe4f0;
+    color: #003366;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-bottom: 1px solid #cdd4db;
+    margin-bottom: 25px;
+    text-align: left;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
