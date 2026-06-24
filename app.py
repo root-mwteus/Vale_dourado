@@ -17,15 +17,30 @@ def login():
     # Pegando o que foi digitado e colocando em uma variável
     usuario_digitado = request.form.get('username')
     senha_digitada = request.form.get('password')
+    modulo_selecionado = request.form.get('modulo')
 
-    if usuario_digitado == "mateus" and senha_digitada == "1234" or usuario_digitado == 'Deivisson' and senha_digitada == "4321"  :
+    if usuario_digitado == "mateus" and senha_digitada == "1234":
+        if modulo_selecionado != 'funcionario':
+             return render_template('login.html', mensagem_erro = "Erro: O usuário 'mateus' não tem acesso ao módulo Gestão!")
+        
         # O usuario é guardado na sessão
         session['usuario'] = usuario_digitado
+        session['role'] = 'funcionario'
         return redirect(url_for('dashboard'))
 
-    else: 
-        return render_template('login.html', mensagem_erro="Erro: Usuário ou Senha incorretos!")
+    elif usuario_digitado == "Deivisson" and senha_digitada == "4321":
+        if modulo_selecionado != "admin":
+            return render_template('login.html', mensagem_erro="Erro: Login administrativo")
+        
+        # O usuario é guardado na sessão
+        session['usuario'] = usuario_digitado
+        session['role'] = 'admin'
+        return redirect(url_for('dashboard'))
 
+
+    else:
+         return render_template('login.html', mensagem_erro="Erro: Usuário ou Senha incorretos!")
+    
 # Rota para o DASHBOARD
 @app.route('/dashboard')
 def dashboard():
