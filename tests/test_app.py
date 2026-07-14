@@ -145,7 +145,7 @@ class AppTests(unittest.TestCase):
         os.environ['DATABASE_PATH'] = self.db_path
         os.environ['SECRET_KEY'] = 'ambiente-teste'
 
-        app_module.load_environment_config()
+        app_module.load_environment_config(app_module.app)
 
         self.assertEqual(app_module.app.config['DATABASE'], self.db_path)
         self.assertEqual(app_module.app.config['SECRET_KEY'], 'ambiente-teste')
