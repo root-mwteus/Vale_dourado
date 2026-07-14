@@ -1,4 +1,5 @@
 import os
+import re
 import tempfile
 import unittest
 
@@ -9,7 +10,7 @@ class AppTests(unittest.TestCase):
     def setUp(self):
         self.db_fd, self.db_path = tempfile.mkstemp()
         os.close(self.db_fd)
-        app_module.app.config.update(TESTING=True, DATABASE=self.db_path, DB_BACKEND='sqlite')
+        app_module.app.config.update(TESTING=True, DATABASE=self.db_path, DB_BACKEND='sqlite', WTF_CSRF_ENABLED=False)
         with app_module.app.app_context():
             app_module.init_db()
         self.client = app_module.app.test_client()
@@ -140,6 +141,31 @@ class AppTests(unittest.TestCase):
 
         self.assertIsNotNone(usuario)
         self.assertEqual(usuario['role'], 'funcionario')
+
+    def test_csrf_protection_blocks_missing_token(self):
+        app_module.app.config.update(WTF_CSRF_ENABLED=True)
+
+        response = self.client.post(
+            '/login',
+            data={'username': 'Deivisson', 'password': '4321', 'modulo': 'admin'},
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_csrf_protection_allows_valid_token(self):
+        app_module.app.config.update(WTF_CSRF_ENABLED=True)
+
+        login_page = self.client.get('/')
+        match = re.search(rb'name="csrf_token" value="([^"]+)"', login_page.data)
+        self.assertIsNotNone(match)
+        token = match.group(1).decode('utf-8')
+
+        response = self.client.post(
+            '/login',
+            data={'username': 'Deivisson', 'password': '4321', 'modulo': 'admin', 'csrf_token': token},
+            follow_redirects=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Painel de Ordens', response.data)
 
     def test_environment_configuration_is_loaded(self):
         os.environ['DATABASE_PATH'] = self.db_path

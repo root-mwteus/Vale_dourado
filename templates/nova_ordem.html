@@ -11,6 +11,7 @@
     <div class="container-fluid px-4">
         <a class="navbar-brand mb-0 h1 fw-bold" href="{{ url_for('dashboard') }}">ORDENS DE SERVIÇO</a>
         <form action="{{ url_for('logout') }}" method="POST" class="m-0">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
         </form>
     </div>
@@ -23,6 +24,7 @@
         <div class="alert alert-danger">{{ mensagem_erro }}</div>
         {% endif %}
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Título</label>

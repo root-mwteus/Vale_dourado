@@ -24,6 +24,7 @@
             </div>
 
             <form action="/login" method="POST" style="margin: 0;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="tabs-container">
                     <input type="radio" class="btn-check" name="modulo" id="mod-func" autocomplete="off" value="funcionario" checked>
                     <label class="tab-btn" for="mod-func">

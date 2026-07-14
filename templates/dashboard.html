@@ -14,6 +14,7 @@
         <div class="d-flex align-items-center gap-2">
             <span class="user-chip">{{ session['usuario'] }} • {{ 'Gestão' if session.get('role') == 'admin' else 'Operação' }}</span>
             <form action="{{ url_for('logout') }}" method="POST" class="m-0">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
             </form>
         </div>

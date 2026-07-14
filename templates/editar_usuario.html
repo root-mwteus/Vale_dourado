@@ -12,6 +12,7 @@
     <div class="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
         <a class="navbar-brand" href="{{ url_for('dashboard') }}">Vale Dourado</a>
         <form action="{{ url_for('logout') }}" method="POST" class="m-0">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
         </form>
     </div>
@@ -33,6 +34,7 @@
         {% endif %}
 
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Usuário</label>
