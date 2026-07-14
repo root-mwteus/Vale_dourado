@@ -2,7 +2,7 @@ from flask import redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
 from src.core import app
-from src.db import get_db
+from src import queries
 
 
 @app.route('/')
@@ -18,11 +18,7 @@ def login():
     senha_digitada = request.form.get('password', '')
     modulo_selecionado = request.form.get('modulo', '')
 
-    conn = get_db()
-    usuario = conn.execute(
-        'SELECT * FROM users WHERE username = ?', (usuario_digitado,)
-    ).fetchone()
-    conn.close()
+    usuario = queries.buscar_usuario_por_username(usuario_digitado)
 
     if not usuario or not check_password_hash(usuario['password_hash'], senha_digitada):
         return render_template('login.html', mensagem_erro='Erro: Usuário ou Senha incorretos!')
