@@ -8,65 +8,70 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 </head>
 <body>
-
-    <img src="{{ url_for('static', filename='images.png') }}" alt="Logo Valedourado" class="logo-empresa">
-
-    <div class="main-container">
-        
-        <div class="top-warning">
-            <strong class="text-danger fs-5">ATENÇÃO!</strong><br>
-            <span class="text-secondary">Selecione o módulo que deseja aceder antes de inserir as suas credenciais.</span>
+    <div class="login-page">
+        <div class="brand-badge">
+            <img src="{{ url_for('static', filename='images.png') }}" alt="Logo Valedourado" class="logo-empresa">
+            <div class="brand-meta">
+                <span class="brand-title">Vale Dourado</span>
+                <span class="brand-subtitle">Gestão operacional • Segurança • Controle</span>
+            </div>
         </div>
 
-        <form action="/login" method="POST" style="margin: 0;">
-            
-            <div class="tabs-container">
-                <input type="radio" class="btn-check" name="modulo" id="mod-func" autocomplete="off" value="funcionario" checked>
-                <label class="tab-btn" for="mod-func">
-                    <strong style="color: #004085; font-size: 1.2rem;">Produção</strong><br>
-                    <span style="font-size: 0.9rem;">(Funcionário)</span>
-                </label>
-
-                <input type="radio" class="btn-check" name="modulo" id="mod-admin" autocomplete="off" value="admin">
-                <label class="tab-btn" for="mod-admin">
-                    <strong style="color: #004085; font-size: 1.2rem;">Gestão</strong><br>
-                    <span style="font-size: 0.9rem;">(Administrativo)</span>
-                </label>
+        <div class="main-container">
+            <div class="top-warning">
+                <strong class="text-danger fs-5">ATENÇÃO!</strong><br>
+                <span class="text-secondary">Selecione o módulo que deseja acessar antes de inserir suas credenciais.</span>
             </div>
 
-            <div class="login-box">
-                
-                <div class="login-inner text-center shadow-sm">
-                    
-                    <div class="login-inner-header">
-                        Entrar no Sistema
-                    </div>
+            <form action="/login" method="POST" style="margin: 0;">
+                <div class="tabs-container">
+                    <input type="radio" class="btn-check" name="modulo" id="mod-func" autocomplete="off" value="funcionario" checked>
+                    <label class="tab-btn" for="mod-func">
+                        <strong>Produção</strong><br>
+                        <span>Funcionário</span>
+                    </label>
 
-                    {% if mensagem_erro %}
-                        <div class="alert alert-danger py-1 mx-3 mb-3" style="font-size: 0.9rem;" role="alert">
-                            {{ mensagem_erro }}
-                        </div>
-                    {% endif %}
-
-                    <div class="mb-3 d-flex align-items-center justify-content-center px-3">
-                        <label for="username" class="me-2 fw-bold" style="width: 80px; text-align: right; color: #444;">Usuário:</label>
-                        <input type="text" class="form-control form-control-sm border-secondary" id="username" name="username" style="width: 200px; border-radius: 2px;" required>
-                    </div>
-
-                    <div class="mb-4 d-flex align-items-center justify-content-center px-3">
-                        <label for="password" class="me-2 fw-bold" style="width: 80px; text-align: right; color: #444;">Senha:</label>
-                        <input type="password" class="form-control form-control-sm border-secondary" id="password" name="password" style="width: 200px; border-radius: 2px;" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-light btn-sm border border-secondary px-4 py-1 fw-bold" style="background-color: #f4f4f4; color: #333;">
-                        Entrar
-                    </button>
+                    <input type="radio" class="btn-check" name="modulo" id="mod-admin" autocomplete="off" value="admin">
+                    <label class="tab-btn" for="mod-admin">
+                        <strong>Gestão</strong><br>
+                        <span>Administrativo</span>
+                    </label>
                 </div>
 
-            </div>
+                <div class="login-box">
+                    <div class="login-inner text-center shadow-sm">
+                        <div class="login-inner-header">
+                            Entrar no Sistema
+                        </div>
 
-        </form>
+                        {% if mensagem_erro %}
+                            <div class="alert alert-danger py-1 mx-3 mb-3" style="font-size: 0.9rem;" role="alert">
+                                {{ mensagem_erro }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3 px-3">
+                            <label for="username" class="form-label fw-bold text-dark">Usuário</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+
+                        <div class="mb-4 px-3">
+                            <label for="password" class="form-label fw-bold text-dark">Senha</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">
+                            Entrar
+                        </button>
+
+                        <div class="supabase-footer">
+                            <img src="{{ url_for('static', filename='supabase-mark.svg') }}" alt="Supabase" class="supabase-mark">
+                            <span>Arquitetura preparada para Supabase</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-
 </body>
 </html>

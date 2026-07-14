@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordens de Serviço</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="app-body">
+<nav class="app-navbar">
+    <div class="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Vale Dourado</a>
+        <div class="d-flex gap-2 align-items-center">
+            {% if session.get('role') == 'admin' %}
+            <a class="btn btn-outline-light btn-sm fw-bold px-3" href="{{ url_for('nova_ordem') }}">Nova ordem</a>
+            {% endif %}
+            <form action="{{ url_for('logout') }}" method="POST" class="m-0">
+                <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <section class="hero-card mb-4">
+        <div>
+            <p class="eyebrow">Gestão de ordens</p>
+            <h2>Ordens cadastradas</h2>
+            <p class="mb-0">Busque, filtre e acompanhe o estado de cada atendimento com mais clareza.</p>
+        </div>
+        {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('nova_ordem') }}" class="btn btn-primary">+ Nova ordem</a>
+        {% endif %}
+    </section>
+
+    <section class="panel-card mb-4">
+        <form method="GET" class="row g-2">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="busca" placeholder="Buscar por título, cliente ou responsável" value="{{ busca }}">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="status">
+                    <option value="">Todos os status</option>
+                    <option value="Aberta" {% if status_filtro == 'Aberta' %}selected{% endif %}>Aberta</option>
+                    <option value="Em andamento" {% if status_filtro == 'Em andamento' %}selected{% endif %}>Em andamento</option>
+                    <option value="Concluída" {% if status_filtro == 'Concluída' %}selected{% endif %}>Concluída</option>
+                    <option value="Cancelada" {% if status_filtro == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="prioridade">
+                    <option value="">Todas as prioridades</option>
+                    <option value="Alta" {% if prioridade_filtro == 'Alta' %}selected{% endif %}>Alta</option>
+                    <option value="Média" {% if prioridade_filtro == 'Média' %}selected{% endif %}>Média</option>
+                    <option value="Baixa" {% if prioridade_filtro == 'Baixa' %}selected{% endif %}>Baixa</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="periodo">
+                    <option value="">Todo o período</option>
+                    <option value="7dias" {% if periodo_filtro == '7dias' %}selected{% endif %}>Últimos 7 dias</option>
+                    <option value="30dias" {% if periodo_filtro == '30dias' %}selected{% endif %}>Últimos 30 dias</option>
+                    <option value="90dias" {% if periodo_filtro == '90dias' %}selected{% endif %}>Últimos 90 dias</option>
+                </select>
+            </div>
+            {% if session.get('role') == 'admin' %}
+            <div class="col-md-2">
+                <select class="form-select" name="responsavel">
+                    <option value="">Todos os responsáveis</option>
+                    {% for item in resumo_por_responsavel %}
+                    <option value="{{ item.responsavel }}" {% if responsavel_filtro == item.responsavel %}selected{% endif %}>{{ item.responsavel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            <div class="col-md-2">
+                <button class="btn btn-outline-primary w-100" type="submit">Filtrar</button>
+            </div>
+        </form>
+    </section>
+
+    {% if session.get('role') == 'admin' %}
+    <section class="panel-card mb-4">
+        <h3 class="panel-title mb-3">Resumo por funcionário</h3>
+        <div class="row g-3">
+            {% for item in resumo_por_responsavel %}
+            <div class="col-md-4">
+                <div class="summary-card">
+                    <p class="summary-label">{{ item.responsavel }}</p>
+                    <h3>{{ item.total }}</h3>
+                    <small class="text-muted">{{ item.andamento }} em andamento • {{ item.concluida }} concluídas</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="panel-card mb-4">
+        <h3 class="panel-title mb-3">Resumo por setor</h3>
+        <div class="row g-3">
+            {% for item in resumo_por_setor %}
+            <div class="col-md-4">
+                <div class="summary-card">
+                    <p class="summary-label">{{ item.setor }}</p>
+                    <h3>{{ item.total }}</h3>
+                    <small class="text-muted">{{ item.andamento }} em andamento • {{ item.concluida }} concluídas</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="panel-card mb-4">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <h3 class="panel-title mb-3">Ordens prioritárias</h3>
+                <ul class="list-group list-group-flush">
+                    {% for ordem in ordens_prioritarias %}
+                    <li class="list-group-item px-0">
+                        <strong>{{ ordem.titulo }}</strong><br>
+                        <small class="text-muted">{{ ordem.responsavel }} • {{ ordem.status }}</small>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item px-0 text-muted">Nenhuma ordem prioritária pendente.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3 class="panel-title mb-3">Ordens em acompanhamento</h3>
+                <ul class="list-group list-group-flush">
+                    {% for ordem in ordens_atrasadas %}
+                    <li class="list-group-item px-0">
+                        <strong>{{ ordem.titulo }}</strong><br>
+                        <small class="text-muted">{{ ordem.responsavel }} • {{ ordem.status }}</small>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item px-0 text-muted">Nenhuma ordem em acompanhamento.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="panel-card table-card">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Título</th>
+                        <th>Cliente</th>
+                        <th>Prioridade</th>
+                        <th>Status</th>
+                        <th>Responsável</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ordem in ordens %}
+                    <tr>
+                        <td>{{ ordem.id }}</td>
+                        <td>{{ ordem.titulo }}</td>
+                        <td>{{ ordem.cliente }}</td>
+                        <td><span class="badge-status">{{ ordem.prioridade }}</span></td>
+                        <td><span class="status-pill">{{ ordem.status }}</span></td>
+                        <td>{{ ordem.responsavel }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('detalhe_ordem', ordem_id=ordem.id) }}">Detalhes</a>
+                            {% if session.get('role') == 'admin' %}
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('editar_ordem', ordem_id=ordem.id) }}">Editar</a>
+                            <form action="{{ url_for('excluir_ordem', ordem_id=ordem.id) }}" method="POST" class="d-inline">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Nenhuma ordem cadastrada ainda.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+</body>
+</html>
