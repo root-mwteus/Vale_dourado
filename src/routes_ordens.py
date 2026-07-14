@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 
 from flask import redirect, render_template, request, session, url_for
 
-from core import app
-from db import get_db
-from helpers import login_required, registrar_historico, registrar_historico_alteracao
+from src.core import app
+from src.db import get_db
+from src.helpers import login_required, registrar_historico, registrar_historico_alteracao
 
 
 @app.route('/ordens')

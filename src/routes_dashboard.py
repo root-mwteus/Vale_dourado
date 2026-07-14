@@ -1,8 +1,8 @@
 from flask import render_template, session
 
-from core import app
-from db import get_db
-from helpers import login_required
+from src.core import app
+from src.db import get_db
+from src.helpers import login_required
 
 
 @app.route('/dashboard')

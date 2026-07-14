@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import redirect, session, url_for
 
-from db import get_db
+from src.db import get_db
 
 
 def login_required(route_function):
