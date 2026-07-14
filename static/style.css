@@ -142,21 +142,6 @@ body {
     border: none;
 }
 
-.supabase-footer {
-    margin-top: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: #64748b;
-    font-size: 0.9rem;
-}
-
-.supabase-mark {
-    width: 22px;
-    height: 22px;
-}
-
 .hero-badges {
     display: flex;
     flex-wrap: wrap;
