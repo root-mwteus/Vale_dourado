@@ -3,6 +3,8 @@ import re
 import tempfile
 import unittest
 
+from flask import Flask
+
 import app as app_module
 
 
@@ -166,6 +168,17 @@ class AppTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Painel de Ordens', response.data)
+
+    def test_secret_key_required_without_local_dotenv(self):
+        original_secret_key = os.environ.pop('SECRET_KEY', None)
+        try:
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                fake_app = Flask('fake_app_for_test', root_path=tmp_dir)
+                with self.assertRaises(RuntimeError):
+                    app_module.load_environment_config(fake_app)
+        finally:
+            if original_secret_key is not None:
+                os.environ['SECRET_KEY'] = original_secret_key
 
     def test_environment_configuration_is_loaded(self):
         os.environ['DATABASE_PATH'] = self.db_path

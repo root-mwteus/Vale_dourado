@@ -4,7 +4,8 @@ from pathlib import Path
 
 def load_environment_config(app):
     dotenv_path = Path(app.root_path) / '.env'
-    if dotenv_path.exists():
+    is_local_dev = dotenv_path.exists()
+    if is_local_dev:
         for raw_line in dotenv_path.read_text(encoding='utf-8').splitlines():
             line = raw_line.strip()
             if not line or line.startswith('#') or '=' not in line:
@@ -14,7 +15,16 @@ def load_environment_config(app):
             value = value.strip().strip('"').strip("'")
             os.environ.setdefault(key, value)
 
-    secret_key = os.environ.get('SECRET_KEY', 'dev-only-insecure-key')
+    secret_key = os.environ.get('SECRET_KEY')
+    if not secret_key:
+        if is_local_dev:
+            secret_key = 'dev-only-insecure-key'
+        else:
+            raise RuntimeError(
+                'SECRET_KEY não foi definida. Configure a variável de ambiente SECRET_KEY '
+                'antes de iniciar a aplicação (não há um arquivo .env local, então isso não '
+                'parece ser um ambiente de desenvolvimento).'
+            )
     app.config['SECRET_KEY'] = secret_key
     app.secret_key = secret_key
 
