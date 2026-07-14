@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 
@@ -27,6 +28,11 @@ def load_environment_config(app):
             )
     app.config['SECRET_KEY'] = secret_key
     app.secret_key = secret_key
+
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_SECURE'] = not is_local_dev
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)
 
     supabase_url = os.environ.get('SUPABASE_URL') or os.environ.get('NEXT_PUBLIC_SUPABASE_URL')
     supabase_key = os.environ.get('SUPABASE_KEY') or os.environ.get('SUPABASE_ANON_KEY')

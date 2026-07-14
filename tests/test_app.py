@@ -180,6 +180,33 @@ class AppTests(unittest.TestCase):
             if original_secret_key is not None:
                 os.environ['SECRET_KEY'] = original_secret_key
 
+    def test_session_cookie_security_config(self):
+        self.assertFalse(app_module.app.config['SESSION_COOKIE_SECURE'])
+        self.assertEqual(app_module.app.config['SESSION_COOKIE_SAMESITE'], 'Lax')
+        self.assertTrue(app_module.app.config['SESSION_COOKIE_HTTPONLY'])
+
+        original_secret_key = os.environ.pop('SECRET_KEY', None)
+        try:
+            os.environ['SECRET_KEY'] = 'chave-simulada-de-producao'
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                fake_app = Flask('fake_app_for_test', root_path=tmp_dir)
+                app_module.load_environment_config(fake_app)
+                self.assertTrue(fake_app.config['SESSION_COOKIE_SECURE'])
+        finally:
+            os.environ.pop('SECRET_KEY', None)
+            if original_secret_key is not None:
+                os.environ['SECRET_KEY'] = original_secret_key
+
+    def test_login_sets_permanent_session_cookie(self):
+        response = self.client.post(
+            '/login',
+            data={'username': 'Deivisson', 'password': '4321', 'modulo': 'admin'},
+        )
+        set_cookie = response.headers.get('Set-Cookie', '')
+        self.assertIn('HttpOnly', set_cookie)
+        self.assertIn('SameSite=Lax', set_cookie)
+        self.assertTrue('Expires' in set_cookie or 'Max-Age' in set_cookie)
+
     def test_environment_configuration_is_loaded(self):
         os.environ['DATABASE_PATH'] = self.db_path
         os.environ['SECRET_KEY'] = 'ambiente-teste'

@@ -29,6 +29,7 @@ def login():
     if usuario['role'] == 'admin' and modulo_selecionado != 'admin':
         return render_template('login.html', mensagem_erro='Erro: Login administrativo')
 
+    session.permanent = True
     session['usuario'] = usuario['username']
     session['role'] = usuario['role']
     return redirect(url_for('dashboard'))
