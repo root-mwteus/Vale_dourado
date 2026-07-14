@@ -9,6 +9,7 @@ load_environment_config(app)
 with app.app_context():
     init_db()
 
+import src.errors  # noqa: E402,F401
 import src.routes_auth  # noqa: E402,F401
 import src.routes_dashboard  # noqa: E402,F401
 import src.routes_ordens  # noqa: E402,F401
