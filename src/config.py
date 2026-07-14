@@ -34,6 +34,14 @@ def load_environment_config(app):
     app.config['SESSION_COOKIE_SECURE'] = not is_local_dev
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)
 
+    app.config['RATELIMIT_STORAGE_URI'] = os.environ.get('RATELIMIT_STORAGE_URI', 'memory://')
+    if not is_local_dev and app.config['RATELIMIT_STORAGE_URI'] == 'memory://':
+        app.logger.warning(
+            'RATELIMIT_STORAGE_URI não definida em produção — o limite de tentativas de '
+            'login vai usar armazenamento em memória, que não é confiável em ambientes '
+            'serverless com múltiplas instâncias.'
+        )
+
     supabase_url = os.environ.get('SUPABASE_URL') or os.environ.get('NEXT_PUBLIC_SUPABASE_URL')
     supabase_key = os.environ.get('SUPABASE_KEY') or os.environ.get('SUPABASE_ANON_KEY')
     database_path = os.environ.get('DATABASE_PATH') or os.environ.get('DATABASE')

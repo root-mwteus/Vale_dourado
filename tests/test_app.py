@@ -12,7 +12,13 @@ class AppTests(unittest.TestCase):
     def setUp(self):
         self.db_fd, self.db_path = tempfile.mkstemp()
         os.close(self.db_fd)
-        app_module.app.config.update(TESTING=True, DATABASE=self.db_path, DB_BACKEND='sqlite', WTF_CSRF_ENABLED=False)
+        app_module.app.config.update(
+            TESTING=True, DATABASE=self.db_path, DB_BACKEND='sqlite',
+            WTF_CSRF_ENABLED=False, RATELIMIT_ENABLED=False,
+        )
+        # RATELIMIT_ENABLED so e lido por Flask-Limiter no momento do init_app()
+        # (ja executado na importacao do app), entao precisa ser desligado aqui tambem.
+        app_module.limiter.enabled = False
         with app_module.app.app_context():
             app_module.init_db()
         self.client = app_module.app.test_client()
@@ -143,6 +149,24 @@ class AppTests(unittest.TestCase):
 
         self.assertIsNotNone(usuario)
         self.assertEqual(usuario['role'], 'funcionario')
+
+    def test_login_rate_limit_blocks_after_repeated_attempts(self):
+        app_module.limiter.enabled = True
+        try:
+            for _ in range(5):
+                response = self.client.post(
+                    '/login',
+                    data={'username': 'Deivisson', 'password': 'senha-errada', 'modulo': 'admin'},
+                )
+                self.assertNotEqual(response.status_code, 429)
+
+            blocked_response = self.client.post(
+                '/login',
+                data={'username': 'Deivisson', 'password': 'senha-errada', 'modulo': 'admin'},
+            )
+            self.assertEqual(blocked_response.status_code, 429)
+        finally:
+            app_module.limiter.enabled = False
 
     def test_csrf_protection_blocks_missing_token(self):
         app_module.app.config.update(WTF_CSRF_ENABLED=True)

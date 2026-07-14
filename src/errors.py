@@ -20,3 +20,12 @@ def erro_interno(erro):
         titulo='Algo deu errado',
         mensagem='Ocorreu um erro inesperado. Tente novamente em instantes.',
     ), 500
+
+
+@app.errorhandler(429)
+def limite_de_tentativas(erro):
+    return render_template(
+        'erro.html',
+        titulo='Muitas tentativas',
+        mensagem='Você tentou entrar várias vezes seguidas. Aguarde um minuto e tente novamente.',
+    ), 429

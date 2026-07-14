@@ -1,7 +1,7 @@
 from flask import redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
-from src.core import app
+from src.core import app, limiter
 from src import queries
 
 
@@ -13,6 +13,7 @@ def home():
 
 
 @app.route('/login', methods=['POST'])
+@limiter.limit('5 per minute;20 per hour')
 def login():
     usuario_digitado = request.form.get('username', '').strip()
     senha_digitada = request.form.get('password', '')

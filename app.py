@@ -1,10 +1,11 @@
 import os
 
 from src.config import load_environment_config
-from src.core import app
+from src.core import app, limiter
 from src.db import get_db, init_db  # noqa: F401 (re-exportados para compatibilidade)
 
 load_environment_config(app)
+limiter.init_app(app)
 
 with app.app_context():
     init_db()
