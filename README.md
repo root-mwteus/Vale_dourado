@@ -81,3 +81,11 @@ A suite roda inteiramente contra SQLite (isolada do backend real), cobrindo aute
 ## Deploy
 
 O projeto está configurado para deploy na [Vercel](https://vercel.com) (`vercel.json`), usando Supabase como banco de produção. Nesse cenário, configure `SUPABASE_URL`, `SUPABASE_KEY`, `SECRET_KEY` e (opcionalmente) `RATELIMIT_STORAGE_URI` como variáveis de ambiente no painel do projeto.
+
+## Integração contínua
+
+Todo push/PR na `main` roda a suite de testes automaticamente via GitHub Actions (`.github/workflows/tests.yml`).
+
+## Licença
+
+MIT — veja [LICENSE](LICENSE).
