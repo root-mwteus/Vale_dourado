@@ -75,43 +75,43 @@ class SupabaseConnection:
         elif 'SELECT ID, USERNAME, ROLE' in query.upper():
             select_query = table.select('id,username,role')
 
-        normalized = query.replace('\n', ' ').strip()
-        if 'WHERE username = ?' in normalized.upper():
+        normalized = query.replace('\n', ' ').strip().upper()
+        if 'WHERE USERNAME = ?' in normalized:
             select_query = select_query.eq('username', params[0])
-        elif 'WHERE id = ?' in normalized.upper():
+        elif 'WHERE ID = ?' in normalized:
             select_query = select_query.eq('id', params[0])
-        elif 'LOWER(RESPONSAVEL) = LOWER(?)' in normalized.upper():
+        elif 'LOWER(RESPONSAVEL) = LOWER(?)' in normalized:
             select_query = select_query.ilike('responsavel', params[0])
-        elif 'WHERE 1=1' in normalized.upper() and 'ORDER BY created_at DESC' in normalized.upper():
+        elif 'WHERE 1=1' in normalized and 'ORDER BY CREATED_AT DESC' in normalized:
             select_query = select_query.order('created_at', desc=True)
-        elif 'ORDER BY created_at DESC' in normalized.upper():
+        elif 'ORDER BY CREATED_AT DESC' in normalized:
             select_query = select_query.order('created_at', desc=True)
-        elif 'ORDER BY username' in normalized.upper():
+        elif 'ORDER BY USERNAME' in normalized:
             select_query = select_query.order('username', desc=False)
 
-        if 'LIMIT 5' in normalized.upper():
+        if 'LIMIT 5' in normalized:
             select_query = select_query.limit(5)
-        if 'LIMIT 10' in normalized.upper():
+        if 'LIMIT 10' in normalized:
             select_query = select_query.limit(10)
 
-        if 'WHERE ordem_id = ?' in normalized.upper():
+        if 'WHERE ORDEM_ID = ?' in normalized:
             select_query = select_query.eq('ordem_id', params[0])
 
-        if 'WHERE 1=1' in normalized.upper() and 'status = ?' in normalized.upper():
+        if 'WHERE 1=1' in normalized and 'STATUS = ?' in normalized:
             select_query = select_query.eq('status', params[0])
-        if 'WHERE 1=1' in normalized.upper() and 'prioridade = ?' in normalized.upper():
+        if 'WHERE 1=1' in normalized and 'PRIORIDADE = ?' in normalized:
             select_query = select_query.eq('prioridade', params[0])
-        if 'WHERE 1=1' in normalized.upper() and 'LOWER(responsavel)' in normalized.upper():
+        if 'WHERE 1=1' in normalized and 'LOWER(RESPONSAVEL)' in normalized:
             select_query = select_query.ilike('responsavel', params[0])
-        if 'created_at >= ?' in normalized.upper():
+        if 'CREATED_AT >= ?' in normalized:
             select_query = select_query.gte('created_at', params[0])
 
         response = select_query.execute()
         rows = list(response.data or [])
-        if 'COUNT(*)' in query.upper() and rows:
+        if 'COUNT(*)' in query.upper():
             count_value = getattr(response, 'count', None)
-            if count_value is None and hasattr(response, 'data') and response.data:
-                count_value = len(response.data)
+            if count_value is None:
+                count_value = len(rows)
             rows = [{'total': count_value}]
         return SupabaseCursor(rows)
 
@@ -125,13 +125,9 @@ class SupabaseConnection:
         values = list(params)
         payload = dict(zip(columns, values))
 
-        if 'RETURNING id' in query.lower():
-            response = self.client.from_(table_name).insert(payload).execute()
-            rows = list(response.data or [])
-            return SupabaseCursor(rows)
-
-        self.client.from_(table_name).insert(payload).execute()
-        return SupabaseCursor([])
+        response = self.client.from_(table_name).insert(payload).execute()
+        rows = list(response.data or [])
+        return SupabaseCursor(rows)
 
     def _execute_update(self, query, params):
         match = re.search(r'UPDATE\s+(\w+)\s+SET\s+(.*?)\s+WHERE\s+(.*)', query, re.IGNORECASE | re.DOTALL)
