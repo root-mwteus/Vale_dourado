@@ -37,23 +37,23 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Usuário</label>
-                    <input type="text" class="form-control" value="{{ usuario.username }}" disabled>
+                    <label class="form-label fw-bold" for="username">Usuário</label>
+                    <input type="text" class="form-control" id="username" value="{{ usuario.username }}" disabled>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Perfil</label>
-                    <select class="form-select" name="role">
+                    <label class="form-label fw-bold" for="role">Perfil</label>
+                    <select class="form-select" id="role" name="role">
                         <option value="funcionario" {% if usuario.role == 'funcionario' %}selected{% endif %}>Funcionário</option>
                         <option value="admin" {% if usuario.role == 'admin' %}selected{% endif %}>Administrador</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Nova senha</label>
-                    <input type="password" class="form-control" name="password">
+                    <label class="form-label fw-bold" for="password">Nova senha</label>
+                    <input type="password" class="form-control" id="password" name="password">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Confirmar nova senha</label>
-                    <input type="password" class="form-control" name="confirm_password">
+                    <label class="form-label fw-bold" for="confirm_password">Confirmar nova senha</label>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password">
                 </div>
             </div>
             <div class="mt-4">

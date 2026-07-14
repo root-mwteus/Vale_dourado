@@ -27,32 +27,32 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Título</label>
-                    <input type="text" class="form-control" name="titulo" value="{{ ordem.titulo if ordem else '' }}" required>
+                    <label class="form-label" for="titulo">Título</label>
+                    <input type="text" class="form-control" id="titulo" name="titulo" value="{{ ordem.titulo if ordem else '' }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Cliente</label>
-                    <input type="text" class="form-control" name="cliente" value="{{ ordem.cliente if ordem else '' }}" required>
+                    <label class="form-label" for="cliente">Cliente</label>
+                    <input type="text" class="form-control" id="cliente" name="cliente" value="{{ ordem.cliente if ordem else '' }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Prioridade</label>
-                    <select class="form-select" name="prioridade">
+                    <label class="form-label" for="prioridade">Prioridade</label>
+                    <select class="form-select" id="prioridade" name="prioridade">
                         <option value="Alta" {% if ordem and ordem.prioridade == 'Alta' %}selected{% endif %}>Alta</option>
                         <option value="Média" {% if ordem and ordem.prioridade == 'Média' %}selected{% endif %}>Média</option>
                         <option value="Baixa" {% if ordem and ordem.prioridade == 'Baixa' %}selected{% endif %}>Baixa</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Setor</label>
-                    <input type="text" class="form-control" name="setor" value="{{ ordem.setor if ordem else '' }}" required>
+                    <label class="form-label" for="setor">Setor</label>
+                    <input type="text" class="form-control" id="setor" name="setor" value="{{ ordem.setor if ordem else '' }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Responsável</label>
-                    <input type="text" class="form-control" name="responsavel" value="{{ ordem.responsavel if ordem else '' }}" required>
+                    <label class="form-label" for="responsavel">Responsável</label>
+                    <input type="text" class="form-control" id="responsavel" name="responsavel" value="{{ ordem.responsavel if ordem else '' }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Status</label>
-                    <select class="form-select" name="status">
+                    <label class="form-label" for="status">Status</label>
+                    <select class="form-select" id="status" name="status">
                         <option value="Aberta" {% if ordem and ordem.status == 'Aberta' %}selected{% endif %}>Aberta</option>
                         <option value="Em andamento" {% if ordem and ordem.status == 'Em andamento' %}selected{% endif %}>Em andamento</option>
                         <option value="Concluída" {% if ordem and ordem.status == 'Concluída' %}selected{% endif %}>Concluída</option>
@@ -60,8 +60,8 @@
                     </select>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Descrição</label>
-                    <textarea class="form-control" name="descricao" rows="4" required>{{ ordem.descricao if ordem else '' }}</textarea>
+                    <label class="form-label" for="descricao">Descrição</label>
+                    <textarea class="form-control" id="descricao" name="descricao" rows="4" required>{{ ordem.descricao if ordem else '' }}</textarea>
                 </div>
             </div>
             <div class="mt-4 d-flex gap-2">

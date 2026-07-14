@@ -38,10 +38,10 @@
     <section class="panel-card mb-4">
         <form method="GET" class="row g-2">
             <div class="col-md-4">
-                <input type="text" class="form-control" name="busca" placeholder="Buscar por título, cliente ou responsável" value="{{ busca }}">
+                <input type="text" class="form-control" name="busca" placeholder="Buscar por título, cliente ou responsável" aria-label="Buscar por título, cliente ou responsável" value="{{ busca }}">
             </div>
             <div class="col-md-2">
-                <select class="form-select" name="status">
+                <select class="form-select" name="status" aria-label="Filtrar por status">
                     <option value="">Todos os status</option>
                     <option value="Aberta" {% if status_filtro == 'Aberta' %}selected{% endif %}>Aberta</option>
                     <option value="Em andamento" {% if status_filtro == 'Em andamento' %}selected{% endif %}>Em andamento</option>
@@ -50,7 +50,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <select class="form-select" name="prioridade">
+                <select class="form-select" name="prioridade" aria-label="Filtrar por prioridade">
                     <option value="">Todas as prioridades</option>
                     <option value="Alta" {% if prioridade_filtro == 'Alta' %}selected{% endif %}>Alta</option>
                     <option value="Média" {% if prioridade_filtro == 'Média' %}selected{% endif %}>Média</option>
@@ -58,7 +58,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <select class="form-select" name="periodo">
+                <select class="form-select" name="periodo" aria-label="Filtrar por período">
                     <option value="">Todo o período</option>
                     <option value="7dias" {% if periodo_filtro == '7dias' %}selected{% endif %}>Últimos 7 dias</option>
                     <option value="30dias" {% if periodo_filtro == '30dias' %}selected{% endif %}>Últimos 30 dias</option>
@@ -67,7 +67,7 @@
             </div>
             {% if session.get('role') == 'admin' %}
             <div class="col-md-2">
-                <select class="form-select" name="responsavel">
+                <select class="form-select" name="responsavel" aria-label="Filtrar por responsável">
                     <option value="">Todos os responsáveis</option>
                     {% for item in resumo_por_responsavel %}
                     <option value="{{ item.responsavel }}" {% if responsavel_filtro == item.responsavel %}selected{% endif %}>{{ item.responsavel }}</option>
