@@ -3,6 +3,8 @@ import re
 import tempfile
 import unittest
 
+from pathlib import Path
+
 from flask import Flask
 
 import app as app_module
@@ -205,17 +207,24 @@ class AppTests(unittest.TestCase):
                 os.environ['SECRET_KEY'] = original_secret_key
 
     def test_session_cookie_security_config(self):
-        self.assertFalse(app_module.app.config['SESSION_COOKIE_SECURE'])
-        self.assertEqual(app_module.app.config['SESSION_COOKIE_SAMESITE'], 'Lax')
-        self.assertTrue(app_module.app.config['SESSION_COOKIE_HTTPONLY'])
-
         original_secret_key = os.environ.pop('SECRET_KEY', None)
         try:
             os.environ['SECRET_KEY'] = 'chave-simulada-de-producao'
+
+            # sem .env local (ex: producao/CI) -> cookie exige HTTPS
             with tempfile.TemporaryDirectory() as tmp_dir:
-                fake_app = Flask('fake_app_for_test', root_path=tmp_dir)
+                fake_app = Flask('fake_app_for_test_prod', root_path=tmp_dir)
                 app_module.load_environment_config(fake_app)
                 self.assertTrue(fake_app.config['SESSION_COOKIE_SECURE'])
+                self.assertEqual(fake_app.config['SESSION_COOKIE_SAMESITE'], 'Lax')
+                self.assertTrue(fake_app.config['SESSION_COOKIE_HTTPONLY'])
+
+            # com .env local (dev) -> nao exige HTTPS, senao quebraria http://localhost
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                (Path(tmp_dir) / '.env').write_text('SUPABASE_URL=https://fake.supabase.co\nSUPABASE_KEY=fake\n')
+                fake_app_dev = Flask('fake_app_for_test_dev', root_path=tmp_dir)
+                app_module.load_environment_config(fake_app_dev)
+                self.assertFalse(fake_app_dev.config['SESSION_COOKIE_SECURE'])
         finally:
             os.environ.pop('SECRET_KEY', None)
             if original_secret_key is not None:
