@@ -2,8 +2,7 @@
 
 Projeto de portfólio: um sistema web para digitalizar o controle de ordens de serviço de uma empresa de laticínios, substituindo um processo hoje feito em papel.
 
-> **Nota:** este é um projeto pessoal de portfólio, sem nenhum vínculo real com uma empresa chamada "Vale Dourado". A ideia nasceu de um problema real descrito por um amigo que trabalha numa empresa de laticínios — a desorganização e a dependência de papel no controle de ordens de serviço — mas o sistema, os dados e a "empresa" aqui são fictícios.
-
+> **Nota:** este é um projeto pessoal de portfólio, sem nenhum vínculo real a empresa chamada "Vale Dourado". A ideia nasceu de um problema real descrito por um amigo que trabalha numa empresa de laticínios, onde eu apenas peguei essa ideia e configurei para uma empresa local.
 ## Funcionalidades
 
 - Login com dois papéis: **administrador** (gestão completa) e **funcionário** (só enxerga e edita as próprias ordens)

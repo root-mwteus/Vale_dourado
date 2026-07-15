@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sistema de Laticínios</title>
+    <title>Dashboard - Vale Dourado</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="app-body">
+{% from '_macros.html' import status_pill, priority_badge %}
 <nav class="app-navbar">
     <div class="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
         <a class="navbar-brand" href="{{ url_for('dashboard') }}">Vale Dourado</a>
@@ -31,9 +32,6 @@
             {% else %}
             <p class="mb-0">Você visualiza e acompanha apenas as ordens atribuídas a você, com foco na execução diária.</p>
             {% endif %}
-        </div>
-        <div class="hero-badges">
-            <span class="hero-badge muted">Gestão corporativa</span>
         </div>
         {% if session.get('role') == 'admin' %}
         <div class="d-flex gap-2">
@@ -74,10 +72,11 @@
             <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                 <div>
                     <strong>{{ ordem.titulo }}</strong><br>
-                    <small class="text-muted">{{ ordem.cliente }} • {{ ordem.status }}</small>
+                    <small class="text-muted">{{ ordem.cliente }}</small>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge-status">{{ ordem.prioridade }}</span>
+                    {{ status_pill(ordem.status) }}
+                    {{ priority_badge(ordem.prioridade) }}
                     {% if session.get('role') == 'admin' %}
                     <a href="{{ url_for('editar_ordem', ordem_id=ordem.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
                     {% else %}

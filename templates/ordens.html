@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="app-body">
+{% from '_macros.html' import status_pill, priority_badge %}
 <nav class="app-navbar">
     <div class="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
         <a class="navbar-brand" href="{{ url_for('dashboard') }}">Vale Dourado</a>
@@ -164,8 +165,8 @@
                         <td>{{ ordem.id }}</td>
                         <td>{{ ordem.titulo }}</td>
                         <td>{{ ordem.cliente }}</td>
-                        <td><span class="badge-status">{{ ordem.prioridade }}</span></td>
-                        <td><span class="status-pill">{{ ordem.status }}</span></td>
+                        <td>{{ priority_badge(ordem.prioridade) }}</td>
+                        <td>{{ status_pill(ordem.status) }}</td>
                         <td>{{ ordem.responsavel }}</td>
                         <td>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('detalhe_ordem', ordem_id=ordem.id) }}">Detalhes</a>

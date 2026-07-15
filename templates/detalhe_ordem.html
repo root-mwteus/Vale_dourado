@@ -3,89 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes da Ordem</title>
+    <title>{{ ordem.titulo }} - Vale Dourado</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
-    <div class="container-fluid px-4">
-        <a class="navbar-brand mb-0 h1 fw-bold" href="{{ url_for('dashboard') }}">ORDENS DE SERVIÇO</a>
-        <form action="{{ url_for('logout') }}" method="POST" class="m-0">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
-        </form>
+<body class="app-body">
+{% from '_macros.html' import status_pill, priority_badge %}
+<nav class="app-navbar">
+    <div class="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Vale Dourado</a>
+        <div class="d-flex align-items-center gap-2">
+            <span class="user-chip">{{ session['usuario'] }} • {{ 'Gestão' if session.get('role') == 'admin' else 'Operação' }}</span>
+            <form action="{{ url_for('logout') }}" method="POST" class="m-0">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
+            </form>
+        </div>
     </div>
 </nav>
 
-<div class="container">
-    <div class="card shadow-sm border-0 p-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="h4 text-primary mb-1">{{ ordem.titulo }}</h2>
-                <p class="text-muted mb-0">Detalhes completos da ordem de serviço.</p>
-            </div>
-            <a href="{{ url_for('ordens') }}" class="btn btn-outline-secondary btn-sm">Voltar</a>
+<div class="container py-4">
+    <section class="hero-card mb-4">
+        <div>
+            <p class="eyebrow">Detalhes da ordem</p>
+            <h2>{{ ordem.titulo }}</h2>
+            <p class="mb-0">Informações completas e histórico de alterações desta ordem de serviço.</p>
         </div>
+        <div class="d-flex align-items-center gap-2">
+            {{ status_pill(ordem.status) }}
+            {{ priority_badge(ordem.prioridade) }}
+            <a href="{{ url_for('ordens') }}" class="btn btn-outline-primary">Voltar</a>
+        </div>
+    </section>
 
+    <section class="panel-card">
         <div class="row g-3">
             <div class="col-md-6">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Cliente</h6>
-                    <p class="fw-semibold mb-0">{{ ordem.cliente }}</p>
+                <div class="detail-field">
+                    <h6>Cliente</h6>
+                    <p>{{ ordem.cliente }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-field">
+                    <h6>Responsável</h6>
+                    <p>{{ ordem.responsavel }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-field">
+                    <h6>Setor</h6>
+                    <p>{{ ordem.setor }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-field">
+                    <h6>Criado em</h6>
+                    <p>{{ ordem.created_at }}</p>
                 </div>
             </div>
             <div class="col-12">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Histórico de alterações</h6>
+                <div class="detail-field">
+                    <h6>Descrição</h6>
+                    <p class="fw-normal">{{ ordem.descricao }}</p>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="detail-field">
+                    <h6>Histórico de alterações</h6>
                     {% if historico %}
-                        <ul class="mb-0">
+                        <ul class="mb-0 ps-3">
                             {% for item in historico %}
                                 <li><strong>{{ item.created_at }}</strong> — {{ item.usuario }}: {{ item.acao }} — {{ item.detalhes }}</li>
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p class="mb-0 text-muted">Nenhuma alteração registrada ainda.</p>
+                        <p class="mb-0 fw-normal text-muted">Nenhuma alteração registrada ainda.</p>
                     {% endif %}
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Responsável</h6>
-                    <p class="fw-semibold mb-0">{{ ordem.responsavel }}</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Prioridade</h6>
-                    <p class="fw-semibold mb-0">{{ ordem.prioridade }}</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Status</h6>
-                    <p class="fw-semibold mb-0">{{ ordem.status }}</p>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Descrição</h6>
-                    <p class="mb-0">{{ ordem.descricao }}</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Setor</h6>
-                    <p class="fw-semibold mb-0">{{ ordem.setor }}</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="border rounded p-3 bg-white">
-                    <h6 class="text-muted">Criado em</h6>
-                    <p class="fw-semibold mb-0">{{ ordem.created_at }}</p>
-                </div>
-            </div>
         </div>
-    </div>
+    </section>
 </div>
 </body>
 </html>

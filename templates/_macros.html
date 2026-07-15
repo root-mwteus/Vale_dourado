@@ -1,0 +1,18 @@
+{% macro status_pill(status) %}
+{% set classes = {
+    'Aberta': 'status-aberta',
+    'Em andamento': 'status-andamento',
+    'Concluída': 'status-concluida',
+    'Cancelada': 'status-cancelada'
+} %}
+<span class="status-pill {{ classes.get(status, '') }}">{{ status }}</span>
+{% endmacro %}
+
+{% macro priority_badge(prioridade) %}
+{% set classes = {
+    'Alta': 'prioridade-alta',
+    'Média': 'prioridade-media',
+    'Baixa': 'prioridade-baixa'
+} %}
+<span class="badge-status {{ classes.get(prioridade, '') }}">{{ prioridade }}</span>
+{% endmacro %}

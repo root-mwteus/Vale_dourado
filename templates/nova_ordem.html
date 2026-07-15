@@ -3,23 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Ordem</title>
+    <title>{{ 'Editar Ordem' if ordem else 'Nova Ordem' }} - Vale Dourado</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
-    <div class="container-fluid px-4">
-        <a class="navbar-brand mb-0 h1 fw-bold" href="{{ url_for('dashboard') }}">ORDENS DE SERVIÇO</a>
-        <form action="{{ url_for('logout') }}" method="POST" class="m-0">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
-        </form>
+<body class="app-body">
+<nav class="app-navbar">
+    <div class="container-fluid px-4 py-3 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Vale Dourado</a>
+        <div class="d-flex align-items-center gap-2">
+            <span class="user-chip">{{ session['usuario'] }} • {{ 'Gestão' if session.get('role') == 'admin' else 'Operação' }}</span>
+            <form action="{{ url_for('logout') }}" method="POST" class="m-0">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-light btn-sm fw-bold px-3">Sair</button>
+            </form>
+        </div>
     </div>
 </nav>
 
-<div class="container">
-    <div class="card shadow-sm border-0 p-4">
-        <h2 class="h4 text-primary mb-3">{{ 'Editar Ordem' if ordem else 'Nova Ordem de Serviço' }}</h2>
+<div class="container py-4">
+    <section class="hero-card mb-4">
+        <div>
+            <p class="eyebrow">Gestão de ordens</p>
+            <h2>{{ 'Editar Ordem de Serviço' if ordem else 'Nova Ordem de Serviço' }}</h2>
+            <p class="mb-0">Preencha os dados abaixo para {{ 'atualizar' if ordem else 'registrar' }} a ordem.</p>
+        </div>
+        <a href="{{ url_for('ordens') }}" class="btn btn-outline-primary">Voltar</a>
+    </section>
+
+    <section class="panel-card">
         {% if mensagem_erro %}
         <div class="alert alert-danger">{{ mensagem_erro }}</div>
         {% endif %}
@@ -66,10 +78,10 @@
             </div>
             <div class="mt-4 d-flex gap-2">
                 <button class="btn btn-primary" type="submit">Salvar</button>
-                <a class="btn btn-outline-secondary" href="{{ url_for('ordens') }}">Voltar</a>
+                <a class="btn btn-outline-secondary" href="{{ url_for('ordens') }}">Cancelar</a>
             </div>
         </form>
-    </div>
+    </section>
 </div>
 </body>
 </html>

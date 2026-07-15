@@ -41,8 +41,14 @@
                 <tbody>
                     {% for usuario in usuarios %}
                     <tr>
-                        <td>{{ usuario.username }}</td>
-                        <td>{{ 'Administrador' if usuario.role == 'admin' else 'Funcionário' }}</td>
+                        <td class="fw-semibold">{{ usuario.username }}</td>
+                        <td>
+                            {% if usuario.role == 'admin' %}
+                            <span class="badge-status role-admin">Administrador</span>
+                            {% else %}
+                            <span class="badge-status">Funcionário</span>
+                            {% endif %}
+                        </td>
                         <td>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}">Editar</a>
                             {% if usuario.username != session['usuario'] %}
