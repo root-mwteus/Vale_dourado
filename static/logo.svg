@@ -1,0 +1,6 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Vale Dourado">
+    <rect width="100" height="100" rx="20" fill="#1c2740"/>
+    <circle cx="68" cy="30" r="13" fill="#c9962c"/>
+    <path d="M0,72 C20,55 35,82 50,66 C65,50 80,78 100,60 L100,100 L0,100 Z" fill="#2b3a5c"/>
+    <path d="M0,84 C20,68 35,90 55,76 C70,66 85,86 100,74 L100,100 L0,100 Z" fill="#b8862e"/>
+</svg>
